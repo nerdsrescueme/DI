@@ -12,19 +12,17 @@
          bootstrap="vendor/autoload.php"
 >
     <testsuites>
+        <testsuite name="Nerd Bundle Test Suite">
+            <directory>./Bundle/Tests/</directory>
+        </testsuite>
+        <testsuite name="Nerd Container Test Suite">
+            <directory>./Container/Tests/</directory>
+        </testsuite>
+        <testsuite name="Nerd Event Manager Test Suite">
+            <directory>./Event/Tests/</directory>
+        </testsuite>
         <testsuite name="Nerd Kernel Test Suite">
-            <directory>./Tests/</directory>
+            <directory>./Kernel/Tests/</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>./</directory>
-            <exclude>
-                <directory>./Resources</directory>
-                <directory>./Tests</directory>
-                <directory>./vendor</directory>
-            </exclude>
-        </whitelist>
-    </filter>
 </phpunit>
