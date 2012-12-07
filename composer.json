@@ -1,0 +1,14 @@
+{
+    "name": "nerdsrescueme/core",
+    "description": "Nerd Core Library",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Frank Bardon Jr",
+            "email": "frankbardon@gmail.com"
+        }
+    ],
+    "require": {
+
+    }
+}
