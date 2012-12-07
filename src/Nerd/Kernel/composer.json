@@ -1,0 +1,27 @@
+{
+    "name": "nerdsrescueme/event",
+    "type": "library",
+    "description": "Nerd Kernel Component",
+    "keywords": [],
+    "homepage": "http://nerdsrescue.me",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Frank Bardon Jr",
+            "email": "frankbardon@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.4"
+    },
+    "autoload": {
+        "psr-0": { "Nerd\\Kernel\\": "" }
+    },
+    "target-dir": "Nerd/Kernel",
+    "minimum-stability": "dev",
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.2-dev"
+        }
+    }
+}
