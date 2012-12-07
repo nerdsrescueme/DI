@@ -13,7 +13,7 @@ class Manager implements \Iterator
     // sets first registered bundle as active
     public function register(Bundle $bundle)
     {
-        $name = $bundle->getName();
+        $name   = $bundle->getName();
 
         if ($this->has($name)) {
             throw new \RuntimeException("Bundle [$name] has already been registered");

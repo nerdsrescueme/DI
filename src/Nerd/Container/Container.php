@@ -8,7 +8,7 @@ class Container implements ContainerInterface
 
     protected $objects = [];
 
-    public function set($class, $name)
+    public function set($name, $class)
     {
         if (isset($this->objects[$name])) {
             throw new \InvalidArgumentException("Class alias [$name] is already registered within container");

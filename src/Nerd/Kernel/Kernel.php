@@ -3,7 +3,6 @@
 namespace Nerd\Kernel;
 
 use Nerd\Event\DispatcherInterface as DI;
-use Nerd\Bundle\Manager as BM;
 use Nerd\Container\ContainerInterface as CI;
 
 class Kernel implements KernelInterface
@@ -17,23 +16,21 @@ class Kernel implements KernelInterface
     const END      = 'kernel.end';
 
     protected $dispatcher;
-    protected $bundles;
     protected $container;
     protected $root;
+    protected $bundleData;
 
-    public function __construct(DI $dispatcher, BM $bundles, CI $container)
+    public function __construct(DI $dispatcher, CI $container)
     {
         $this->dispatcher = $dispatcher;
-        $this->bundles = $bundles->setContainer($container);
         $this->container = $container;
     }
 
-    public function getDirectory()
+    public function getRoot()
     {
         return $this->directory;
     }
 
-    // Where bundles are located.
     public function setRoot($directory)
     {
         if (!is_dir($directory)) {
@@ -50,18 +47,26 @@ class Kernel implements KernelInterface
         return $this->dispatcher;
     }
 
-    public function getBundles()
-    {
-        return $this->bundles;
-    }
-
-    public function registerBundle($bundle)
-    {
-        $this->bundles->register($bundle);
-    }
-
     public function getContainer()
     {
         return $this->container;
+    }
+
+    public function registerBundle($bundleName)
+    {
+        $loader = $this->container->get('loader');
+        $path   = $this->getRoot()
+            .DIRECTORY_SEPARATOR.'bundles'
+            .DIRECTORY_SEPARATOR.strtolower($bundleName)
+            .DIRECTORY_SEPARATOR.'src'
+            .DIRECTORY_SEPARATOR;
+
+        $loader->add(ucfirst($bundleName).'\\', $path);
+        $bundle = ucfirst($bundleName).'\\Bundle';
+        $bundle = new $bundle();
+        $bundle->initialize();
+        $this->bundleData[$bundleName] = $bundle;
+
+        return $bundle;
     }
 }

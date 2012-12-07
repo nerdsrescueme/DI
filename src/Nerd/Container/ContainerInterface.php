@@ -4,7 +4,7 @@ namespace Nerd\Container;
 
 interface ContainerInterface
 {
-    public function set($class, $name);
+    public function set($name, $class);
 
     public function delete($name);
 
