@@ -13,6 +13,8 @@
     },
 
     "autoload": {
-        "psr-0": { "Nerd\\": "src/" }
-    },
+        "psr-0": {
+            "Nerd\\": "src/"
+        }
+    }
 }
