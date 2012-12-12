@@ -2,7 +2,7 @@
 
 namespace Nerd\Core\Event;
 
-class Listener implements ListenerInterface
+abstract class ListenerAbstract implements ListenerInterface
 {
     protected $priority = 0;
 
