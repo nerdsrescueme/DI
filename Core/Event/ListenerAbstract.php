@@ -23,9 +23,5 @@ abstract class ListenerAbstract implements ListenerInterface
         return $this;
     }
 
-    // Must return the event object in case of alterations...
-    public function __invoke(EventInterface $event)
-    {
-        echo 'LISTENER FIRED<br>'.PHP_EOL;
-    }
+    abstract public function __invoke(EventInterface $event);
 }
