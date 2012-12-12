@@ -15,7 +15,7 @@ abstract class ListenerAbstract implements ListenerInterface
     {
         // This check is only in place until scalar type hinting...
         if (!is_int($priority)) {
-            throw new \InvalidArgumentException('Argument 1 must be of type integer');
+            throw new \InvalidArgumentException('Priority must be an integer');
         }
 
         $this->priority = $priority;

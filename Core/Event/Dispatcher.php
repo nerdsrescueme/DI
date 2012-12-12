@@ -62,6 +62,13 @@ class Dispatcher implements DispatcherInterface
     {
         $listeners = $this->get($event);
 
+        usort($listeners, function($a, $b) {
+            $a = $a->getPriority();
+            $b = $b->getPriority();
+            if ($a == $b) return 0;
+            return ($a < $b) ? -1 : 1;
+        });
+
         foreach ($listeners as $listener) {
             $listener($object);
             if ($object->isPropogationStopped()) {

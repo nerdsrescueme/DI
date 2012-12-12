@@ -17,7 +17,7 @@ class Event implements EventInterface
 
     public function isPropogationStopped()
     {
-        return $this->propogate;
+        return ! $this->propogate;
     }
 
     public function getDispatcher()
