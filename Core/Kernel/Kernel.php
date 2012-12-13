@@ -25,9 +25,10 @@ class Kernel implements KernelInterface
         });
 
         // Register exception handler
-        set_exception_handler(function($e) use ($dispatcher) {
+        set_exception_handler(function($e) use ($dispatcher, $container) {
             $event = new \Nerd\Core\Event\Event('exception', $dispatcher);
             $event->exception = $e;
+            $event->container = $container;
 
             $dispatcher->dispatch('exception', $event);
         });
