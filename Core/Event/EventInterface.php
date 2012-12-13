@@ -13,4 +13,6 @@ interface EventInterface
     public function isPropogationStopped();
 
     public function stopPropogation();
+
+    public function dispatch();
 }

@@ -8,5 +8,7 @@ interface ListenerInterface
 
     public function setPriority($priority);
 
+    public function determine(EventInterface $event);
+
     public function __invoke(EventInterface $event);
 }

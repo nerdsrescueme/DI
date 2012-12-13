@@ -15,6 +15,11 @@ class Event implements EventInterface
         $this->dispatcher = $dispatcher;
     }
 
+    public function dispatch()
+    {
+        $this->getDispatcher()->dispatch($this->getName(), $this);
+    }
+
     public function isPropogationStopped()
     {
         return ! $this->propogate;
@@ -28,6 +33,13 @@ class Event implements EventInterface
     public function getName()
     {
         return $this->name;
+    }
+
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
 	public function getArgument($key)

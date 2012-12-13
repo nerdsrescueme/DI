@@ -70,7 +70,7 @@ class Dispatcher implements DispatcherInterface
         });
 
         foreach ($listeners as $listener) {
-            $listener($object);
+            $listener->determine($object) and $listener($object);
             if ($object->isPropogationStopped()) {
                 break;
             }

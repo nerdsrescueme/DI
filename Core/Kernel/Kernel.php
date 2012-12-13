@@ -8,14 +8,6 @@ use Nerd\Core\Event\DispatcherInterface as DI
 
 class Kernel implements KernelInterface
 {
-    // Kernel events
-    const START    = 'kernel.start';
-    const REQUEST  = 'kernel.request';
-    const DISPATCH = 'kernel.dispatch';
-    const RESPONSE = 'kernel.response';
-    const PRESENT  = 'kernel.present';
-    const END      = 'kernel.end';
-
     protected $dispatcher;
     protected $container;
     protected $root;
@@ -26,6 +18,19 @@ class Kernel implements KernelInterface
     {
         $this->dispatcher = $dispatcher;
         $this->container = $container;
+
+        // All errors treated as exceptions
+        set_error_handler(function ($no, $str, $file, $line) {
+            throw new \ErrorException($str, $no, 0, $file, $line);
+        });
+
+        // Register exception handler
+        set_exception_handler(function($e) use ($dispatcher) {
+            $event = new \Nerd\Core\Event\Event('exception', $dispatcher);
+            $event->exception = $e;
+
+            $dispatcher->dispatch('exception', $event);
+        });
     }
 
 	public function getEnvironment()
