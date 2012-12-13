@@ -52,4 +52,14 @@ class Event implements EventInterface
 
         return $this;
     }
+
+	public function __get($property)
+	{
+		return $this->getArgument($property);
+	}
+
+	public function __set($property, $value)
+	{
+		$this->setArgument($property, $value);
+	}
 }

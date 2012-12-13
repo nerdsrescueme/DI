@@ -23,6 +23,11 @@ class Container implements ContainerInterface
         return $class;
     }
 
+	public function __set($property, $value)
+	{
+		$this->set($property, $value);
+	}
+
     public function delete($name)
     {
         if ($this->has($name)) {
@@ -41,6 +46,11 @@ class Container implements ContainerInterface
 
         return $this->objects[$name];
     }
+
+	public function __get($property)
+	{
+		return $this->get($property);
+	}
 
     public function has($name)
     {
