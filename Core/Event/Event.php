@@ -17,6 +17,7 @@ class Event implements EventInterface
 
     public function dispatch()
     {
+        $this->propogate = true;
         $this->getDispatcher()->dispatch($this->getName(), $this);
     }
 
