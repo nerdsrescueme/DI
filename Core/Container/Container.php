@@ -10,10 +10,6 @@ class Container implements ContainerInterface
 
     public function set($name, $class)
     {
-        if (isset($this->objects[$name])) {
-            throw new \InvalidArgumentException("Class alias [$name] is already registered within container");
-        }
-
         if ($class instanceof Aware) {
             $class->setContainer($this);
         }
