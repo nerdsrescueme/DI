@@ -18,20 +18,6 @@ class Kernel implements KernelInterface
     {
         $this->dispatcher = $dispatcher;
         $this->container = $container;
-
-        // All errors treated as exceptions
-        set_error_handler(function ($no, $str, $file, $line) {
-            throw new \ErrorException($str, $no, 0, $file, $line);
-        });
-
-        // Register exception handler
-        set_exception_handler(function($e) use ($dispatcher, $container) {
-            $event = new \Nerd\Core\Event\Event('exception', $dispatcher);
-            $event->exception = $e;
-            $event->container = $container;
-
-            $dispatcher->dispatch('exception', $event);
-        });
     }
 
 	public function getEnvironment()
