@@ -5,7 +5,6 @@ namespace Nerd\Core\Event;
 abstract class ListenerAbstract implements ListenerInterface
 {
     protected $priority = 0;
-    protected $determination;
 
     public function getPriority()
     {
@@ -25,7 +24,7 @@ abstract class ListenerAbstract implements ListenerInterface
     }
 
     // Should this listener run?
-    public function determine(EventInterface $event)
+    public function qualify(EventInterface $event)
     {
         return true;
     }

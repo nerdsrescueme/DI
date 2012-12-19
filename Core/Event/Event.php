@@ -4,9 +4,6 @@ namespace Nerd\Core\Event;
 
 class Event implements \SplSubject, EventInterface
 {
-    const MODE_DISPATCHER = 0;
-    const MODE_NOTIFIER = 1;
-
     protected $dispatcher;
     protected $name;
     protected $propogate = true;
@@ -17,29 +14,8 @@ class Event implements \SplSubject, EventInterface
     public function __construct($name, DispatcherInterface $dispatcher = null)
     {
         $this->setName($name);
-
-        if ($dispatcher === null) {
-            $this->mode = self::MODE_NOTIFIER;
-            $this->observers = new \SplObjectStorage();
-        } else {
-            $this->mode = self::MODE_DISPATCHER;
-            $this->dispatcher = $dispatcher;
-        }
-    }
-
-    public function getMode()
-    {
-        return $this->mode;
-    }
-
-    public function isNotifier()
-    {
-        return $this->getMode() === self::MODE_NOTIFIER;
-    }
-
-    public function isDispatcher()
-    {
-        return $this->getMode() === self::MODE_DISPATCHER;
+        $this->observers = new \SplObjectStorage();
+        $this->dispatcher = $dispatcher;
     }
 
     public function getName()
@@ -93,10 +69,6 @@ class Event implements \SplSubject, EventInterface
     // Observer methods!
     public function attach(\SplObserver $observer)
     {
-        if (!$this->isNotifier()) {
-            throw new \BadMethodCallException("Event [$this->getName()] is not a notifier");
-        }
-
         $this->observers->attach($observer);
 
         return $this;
@@ -104,10 +76,6 @@ class Event implements \SplSubject, EventInterface
 
     public function detach(\SplObserver $observer)
     {
-        if (!$this->isNotifier()) {
-            throw new \BadMethodCallException("Event [$this->getName()] is not a notifier");
-        }
-
         $this->observers->detach($observer);
 
         return $this;
@@ -115,8 +83,8 @@ class Event implements \SplSubject, EventInterface
 
     public function notify()
     {
-        if (!$this->isNotifier()) {
-            throw new \BadMethodCallException("Event [$this->getName()] is not a notifier");
+        if (!$this->hasObservers()) {
+            throw new \BadMethodCallException("Event [{$this->getName()}] has no observers");
         }
 
         foreach ($this->observers as $observer) {
@@ -126,19 +94,25 @@ class Event implements \SplSubject, EventInterface
         return $this;
     }
 
-    // Dispatcher Methods!
-    public function dispatch()
+    public function getObservers()
     {
-        if (!$this->isDispatcher()) {
-            throw new \BadMethodCallException("Event [$this->getName()] is not a dispatcher");
-        }
-
-        $this->propogate = true;
-        $this->getDispatcher()->dispatch($this->getName(), $this);
+        return $this->observers;
     }
+
+    public function hasObservers()
+    {
+        return count($this->observers) > 0;
+    }
+
+    // Dispatcher Methods!
 
     public function getDispatcher()
     {
         return $this->dispatcher;
+    }
+
+    public function hasDispatcher()
+    {
+        return $this->dispatcher instanceof DispatcherInterface;
     }
 }

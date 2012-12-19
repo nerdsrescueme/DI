@@ -14,31 +14,29 @@ class Dispatcher implements DispatcherInterface
 
         if ($this->has($event)) {
             $this->_dispatch($event, $object);
+        } else {
+            throw new \InvalidArgumentException("Dispatcher does not contain the [$event] event type");
         }
 
         return $object;
     }
 
-    public function register($event, ListenerInterface $listener)
+    public function attach($event, ListenerInterface $listener)
     {
-        if (!isset($this->listeners[$event])) {
-            $this->listeners[$event] = array();
+        if (!$this->has($event)) {
+            $this->listeners[$event] = new \SplObjectStorage;
         }
 
-        $this->listeners[$event][] = $listener;
+        $this->listeners[$event]->attach($listener);
 
         return $this;
     }
 
-    public function unregister($event, ListenerInterface $listener)
+    public function detach($event, ListenerInterface $listener)
     {
-        if ($this->has($event)) {
-            foreach($this->get($event) as $key => $listenerComp) {
-                if ($listenerComp === $listener) {
-                    unset($this->listeners[$event][$key]);
-                    return true;
-                }
-            }
+        if ($this->has($event) and $this->get($event)->contains($listener)) {
+            $this->get($event)->detach($listener);
+            return true;
         }
 
         return false;
@@ -46,31 +44,24 @@ class Dispatcher implements DispatcherInterface
 
     public function get($event)
     {
-        if (!isset($this->listeners[$event])) {
-            return array();
-        }
-
-        return $this->listeners[$event];
+        return $this->has($event) ? $this->listeners[$event] : null;
     }
 
     public function has($event)
     {
-        return isset($this->listeners[$event]) and count($this->listeners[$event]);
+        return isset($this->listeners[$event]);
     }
 
     private function _dispatch($event, EventInterface $object)
     {
-        $listeners = $this->get($event);
+        $listeners = [];
 
-        usort($listeners, function($a, $b) {
-            $a = $a->getPriority();
-            $b = $b->getPriority();
-            if ($a == $b) return 0;
-            return ($a < $b) ? -1 : 1;
-        });
+        foreach($this->get($event) as $listener) {
+            $listeners[$listener->getPriority().'-'.get_class($listener)] = $listener;
+        }
 
-        foreach ($listeners as $listener) {
-            $listener->determine($object) and $listener($object);
+        foreach (ksort($listeners, SORT_NATURAL) as $listener) {
+            $listener->qualify($object) and $listener($object);
             if ($object->isPropogationStopped()) {
                 break;
             }
