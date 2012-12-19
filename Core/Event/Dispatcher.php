@@ -56,11 +56,15 @@ class Dispatcher implements DispatcherInterface
     {
         $listeners = [];
 
-        foreach($this->get($event) as $listener) {
-            $listeners[$listener->getPriority().'-'.get_class($listener)] = $listener;
+        if ($this->has($event)) {
+            foreach($this->get($event) as $listener) {
+               $listeners[$listener->getPriority().'-'.get_class($listener)] = $listener;
+           }
         }
 
-        foreach (ksort($listeners, SORT_NATURAL) as $listener) {
+        ksort($listeners, SORT_NATURAL);
+
+        foreach ($listeners as $listener) {
             $listener->qualify($object) and $listener($object);
             if ($object->isPropogationStopped()) {
                 break;
