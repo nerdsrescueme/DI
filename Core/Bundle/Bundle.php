@@ -2,7 +2,7 @@
 
 namespace Nerd\Core\Bundle;
 
-abstract class Bundle
+class Bundle
 {
     public function getName()
     {

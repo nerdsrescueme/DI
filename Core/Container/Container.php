@@ -4,16 +4,10 @@ namespace Nerd\Core\Container;
 
 class Container implements ContainerInterface
 {
-    public $name;
-
     protected $objects = [];
 
     public function set($name, $class)
     {
-        if ($class instanceof Aware) {
-            $class->setContainer($this);
-        }
-
         $this->objects[$name] = $class;
 
         return $class;

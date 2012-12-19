@@ -2,8 +2,10 @@
 
 namespace Nerd\Core\Kernel;
 
-use Nerd\Core\Event\DispatcherInterface as DI
-  , Nerd\Core\Container\ContainerInterface as CI
+use Nerd\Core\Event\DispatcherInterface
+  , Nerd\Core\Event\Dispatcher
+  , Nerd\Core\Container\ContainerInterface
+  , Nerd\Core\Container\Container
   , Nerd\Core\Environment\Environment;
 
 class Kernel implements KernelInterface
@@ -14,10 +16,11 @@ class Kernel implements KernelInterface
     protected $bundleData;
     protected $environment;
 
-    public function __construct(DI $dispatcher, CI $container)
+    public function __construct(DispatcherInterface $dispatcher = null, 
+                                ContainerInterface $container = null)
     {
-        $this->dispatcher = $dispatcher;
-        $this->container = $container;
+        $this->dispatcher = $dispatcher ?: new Dispatcher();
+        $this->container = $container ?: new Container();
     }
 
 	public function getEnvironment()
@@ -28,6 +31,8 @@ class Kernel implements KernelInterface
 	public function setEnvironment(Environment $environment)
 	{
 		$this->environment = $environment;
+
+        return $this;
 	}
 
     public function getRoot()
