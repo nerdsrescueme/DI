@@ -53,6 +53,11 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($event, $event->setArgument('key', 'value'), '->setArgument() is not chainable');
         $this->assertSame('value', $event->getArgument('key'), '->setArgument() doe not assign a key/val pair');
         $this->assertNull($event->getArgument('fail'), '->getArgument() does not return a null value for an unassigned key');
+
+        // Magic setter and getter...
+        $event->key2 = 'value2';
+        $this->assertSame('value', $event->key, '->__get() does not retrieve a set value');
+        $this->assertSame('value2', $event->key2, '->__set() does not properly set a value');
     }
 
     public function testNotify()
@@ -60,23 +65,22 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $event = new Event('test');
         $notifier = new Stubs\EventObserverStub;
 
-        $this->expectOutputString('EVENT_OBSERVER_STUB_RAN');
+        $event->setArgument('failerran', false);
 
-        $event->setArgument('stubrun', false);
+        $this->expectOutputString('STUBSTUBSTUB');
 
         $this->assertSame($event, $event->attach($notifier), '->attach() is not chainable');
         $this->assertCount(1, $event->getObservers(), '->attach() did not assign the observer to this event');
         $this->assertSame($event, $event->notify(), '->notify() is not chainable');
         $this->assertSame($event, $event->detach($notifier), '->detach() is not chainable');
         $this->assertCount(0, $event->getObservers(), '->detach() did not remove the observer from this event');
-    }
 
-    /**
-     * @expectedException BadMethodCallException
-     */
-    public function testNotifyFails()
-    {
-        $event = new Event('test');
+        $event->attach(new Stubs\EventObserverStubNoQualify);
+        $this->assertCount(1, $event->getObservers(), '->attach() did not assign an observer to this event');
+        $this->assertSame($event, $event->notify(), '->notify() is not chainable');
+
+        $event->attach(new Stubs\EventObserverStubFail);
         $event->notify();
+        $this->assertFalse($event->getArgument('failerran'));
     }
 }

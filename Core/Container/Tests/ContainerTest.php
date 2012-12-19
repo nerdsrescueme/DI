@@ -9,7 +9,7 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testSet()
     {
         $container = new Container;
-        $class = new \stdClass();
+        $class = new \stdClass;
         $this->assertSame($class, $container->set('sample', $class));
     }
 
@@ -19,9 +19,23 @@ class ContainerTest extends \PHPUnit_Framework_TestCase
     public function testGet()
     {
         $container = new Container;
-        $class = new \stdClass();
+        $class = new \stdClass;
         $container->set('sample', $class);
         $this->assertSame($class, $container->get('sample'));
+        $this->assertSame($class, $container->sample);
+
+        $class = new \stdClass;
+        $container->sample2 = $class;
+        $this->assertSame($class, $container->get('sample2'));
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testGetFails()
+    {
+        $container = new Container;
+        $container->get('fail');
     }
 
     /**

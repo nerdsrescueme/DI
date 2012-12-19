@@ -5,15 +5,16 @@ namespace Nerd\Core\Event\Tests\Stubs;
 /**
  * @codeCoverageIgnore
  */
-class EventObserverStub implements \SplObserver
+class EventObserverStubFail implements \SplObserver
 {
 	public function qualify(\SplSubject $subject)
 	{
-		return true;
+		return false;
 	}
 
 	public function update(\SplSubject $subject)
 	{
-		echo 'STUB';
+		// Shouldn't run;
+		$event->setArgument('failerran', true);
 	}
 }

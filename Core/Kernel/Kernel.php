@@ -13,7 +13,6 @@ class Kernel implements KernelInterface
     protected $dispatcher;
     protected $container;
     protected $root;
-    protected $bundleData;
     protected $environment;
 
     public function __construct(DispatcherInterface $dispatcher = null, 
@@ -59,23 +58,5 @@ class Kernel implements KernelInterface
     public function getContainer()
     {
         return $this->container;
-    }
-
-    public function registerBundle($bundleName)
-    {
-        $loader = $this->container->get('loader');
-        $path   = $this->getRoot()
-            .DIRECTORY_SEPARATOR.'bundles'
-            .DIRECTORY_SEPARATOR.strtolower($bundleName)
-            .DIRECTORY_SEPARATOR.'src'
-            .DIRECTORY_SEPARATOR;
-
-        $loader->add(ucfirst($bundleName).'\\', $path);
-        $bundle = ucfirst($bundleName).'\\Bundle';
-        $bundle = new $bundle();
-        $bundle->initialize();
-        $this->bundleData[$bundleName] = $bundle;
-
-        return $bundle;
     }
 }

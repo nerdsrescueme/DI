@@ -12,11 +12,7 @@ class Dispatcher implements DispatcherInterface
             $object = new Event($event, $this);
         }
 
-        if ($this->has($event)) {
-            $this->_dispatch($event, $object);
-        } else {
-            throw new \InvalidArgumentException("Dispatcher does not contain the [$event] event type");
-        }
+        $this->_dispatch($event, $object);
 
         return $object;
     }
@@ -44,7 +40,7 @@ class Dispatcher implements DispatcherInterface
 
     public function get($event)
     {
-        return $this->has($event) ? $this->listeners[$event] : null;
+        return $this->has($event) ? $this->listeners[$event] : [];
     }
 
     public function has($event)
@@ -52,17 +48,22 @@ class Dispatcher implements DispatcherInterface
         return isset($this->listeners[$event]);
     }
 
-    private function _dispatch($event, EventInterface $object)
+    private function _sortListeners($input)
     {
         $listeners = [];
 
-        if ($this->has($event)) {
-            foreach($this->get($event) as $listener) {
-               $listeners[$listener->getPriority().'-'.get_class($listener)] = $listener;
-           }
+        foreach($input as $listener) {
+            $listeners[$listener->getPriority().'-'.get_class($listener)] = $listener;
         }
 
         ksort($listeners, SORT_NATURAL);
+
+        return $listeners;
+    }
+
+    private function _dispatch($event, EventInterface $object)
+    {
+        $listeners = $this->_sortListeners($this->get($event));
 
         foreach ($listeners as $listener) {
             $listener->qualify($object) and $listener($object);

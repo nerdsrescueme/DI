@@ -31,6 +31,22 @@ class ListenerTest extends \PHPUnit_Framework_TestCase
         $this->assertTrue(is_callable($listener), '->__invoke() is not callable');
     }
 
+    public function testSetPriority()
+    {
+        $listener = new Stubs\ListenerStub;
+        $this->assertSame($listener, $listener->setPriority(1), '->setPriority() is not chainable');
+        $this->assertSame(1, $listener->getPriority(), '->setPriority() does not set the given integer to the priority property');
+    }
+
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testSetPriorityChokesOnNonInt()
+    {
+        $listener = new Stubs\ListenerStub;
+        $listener->setPriority('string');
+    }
+
     /**
      * @depends testProvidesCallableInvoker
      */

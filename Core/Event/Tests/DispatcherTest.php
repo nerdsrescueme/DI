@@ -23,12 +23,6 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $listeners, '->attach() does not assign a listener to an event type');
     }
 
-    public function testGetReturnNullIfEventNotExists()
-    {
-        $dispatcher = new Dispatcher;
-        $this->assertNull($dispatcher->get('fail'), '->get() does not return null for non existent event types');
-    }
-
     /**
      * @depends testAttach
      */
@@ -54,15 +48,6 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $dispatcher->attach('test', $listener);
 
         $this->assertTrue($dispatcher->has('test'));
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function testDispatchFailsOnInvalidEventType()
-    {
-        $dispatcher = new Dispatcher;
-        $dispatcher->dispatch('test');
     }
 
     public function testDispatchCreatesBlankEvent()

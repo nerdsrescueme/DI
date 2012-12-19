@@ -83,15 +83,13 @@ class Event implements EventInterface
 
     public function notify()
     {
-        if (!$this->hasObservers()) {
-            throw new \BadMethodCallException("Event [{$this->getName()}] has no observers");
-        }
-
         foreach ($this->observers as $observer) {
-            $run = true;
-            $qualify = method_exists($observer, 'qualify');
-            $qualify and $run = $observer->qualify($this);
-            $run and $observer->update($this);
+            if (method_exists($observer, 'qualify')) {
+                if (!$observer->qualify($this)) {
+                    continue;
+                }
+            }
+            $observer->update($this);
         }
 
         return $this;
