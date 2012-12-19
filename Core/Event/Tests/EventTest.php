@@ -65,22 +65,58 @@ class EventTest extends \PHPUnit_Framework_TestCase
         $event = new Event('test');
         $notifier = new Stubs\EventObserverStub;
 
-        $event->setArgument('failerran', false);
-
-        $this->expectOutputString('STUBSTUBSTUB');
+        $this->expectOutputString('STUB');
 
         $this->assertSame($event, $event->attach($notifier), '->attach() is not chainable');
         $this->assertCount(1, $event->getObservers(), '->attach() did not assign the observer to this event');
         $this->assertSame($event, $event->notify(), '->notify() is not chainable');
         $this->assertSame($event, $event->detach($notifier), '->detach() is not chainable');
         $this->assertCount(0, $event->getObservers(), '->detach() did not remove the observer from this event');
+    }
 
+    public function testNotifyNoQualify()
+    {
+        $event = new Event('test');
         $event->attach(new Stubs\EventObserverStubNoQualify);
+
+        $this->expectOutputString('STUB');
+
         $this->assertCount(1, $event->getObservers(), '->attach() did not assign an observer to this event');
         $this->assertSame($event, $event->notify(), '->notify() is not chainable');
+    }
 
+    public function testNotifyFail()
+    {
+        $event = new Event('test');
+        $event->setArgument('failerran', false);
         $event->attach(new Stubs\EventObserverStubFail);
         $event->notify();
+
         $this->assertFalse($event->getArgument('failerran'));
+    }
+
+    public function testNotifyChain()
+    {
+        $event = new Event('test');
+        $event->attach(new Stubs\EventObserverStubFail);
+        $event->attach(new Stubs\EventObserverStubNoQualify);
+        $event->attach(new Stubs\EventObserverStub);
+
+        $event->setArgument('failerran', false);
+        $this->expectOutputString('STUBSTUB');
+
+        $event->notify();
+
+        $this->assertFalse($event->getArgument('failerran'));
+    }
+
+
+    public function testStopPropFromObserver()
+    {
+        $event = new Event('test');
+        $event->attach(new Stubs\EventObserverStubStopper);
+        $event->notify();
+
+        $this->assertTrue($event->isPropogationStopped());
     }
 }
