@@ -8,7 +8,9 @@ interface ListenerInterface
 
     public function setPriority($priority);
 
-    public function qualify(EventInterface $event);
+    public function qualify(\SplSubject $event);
 
-    public function __invoke(EventInterface $event);
+    public function run(\SplSubject $event);
+
+    public function __invoke(\SplSubject $event);
 }

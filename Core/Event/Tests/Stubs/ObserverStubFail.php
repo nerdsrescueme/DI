@@ -1,6 +1,6 @@
 <?php
 
-namespace Nerd\Core\Event\Tests;
+namespace Nerd\Core\Event\Tests\Stubs;
 
 class ObserverStubFail extends \Nerd\Core\Event\ObserverAbstract
 {

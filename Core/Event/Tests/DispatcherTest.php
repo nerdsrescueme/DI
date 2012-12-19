@@ -16,7 +16,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testAttach()
     {
         $dispatcher = new Dispatcher;
-        $this->assertSame($dispatcher, $dispatcher->attach('test', new ListenerStub), '->attach() is not chainable');
+        $this->assertSame($dispatcher, $dispatcher->attach('test', new Stubs\ListenerStub), '->attach() is not chainable');
 
         $listeners = $dispatcher->get('test');
         $this->assertInstanceOf('\\SplObjectStorage', $listeners, '->get() does not return an instance of SplObjectStorage');
@@ -35,8 +35,8 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testDetach()
     {
         $dispatcher = new Dispatcher;
-        $listener = new ListenerStub;
-        $notattached = new ListenerStub;
+        $listener = new Stubs\ListenerStub;
+        $notattached = new Stubs\ListenerStub;
         $dispatcher->attach('test', $listener);
 
         $this->assertTrue($dispatcher->detach('test', $listener), '->detach() does not return true when removing a valid listener');
@@ -50,7 +50,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testHas()
     {
         $dispatcher = new Dispatcher;
-        $listener = new ListenerStub;
+        $listener = new Stubs\ListenerStub;
         $dispatcher->attach('test', $listener);
 
         $this->assertTrue($dispatcher->has('test'));
@@ -68,7 +68,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testDispatchCreatesBlankEvent()
     {
         $dispatcher = new Dispatcher;
-        $dispatcher->attach('test', new ListenerStub);
+        $dispatcher->attach('test', new Stubs\ListenerStub);
         $event = $dispatcher->dispatch('test');
 
         $this->assertInstanceOf('\\Nerd\\Core\\Event\\EventInterface', $event, '->dispatch() did not create a new Event object');
@@ -79,7 +79,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     public function testDispatchUsesInjectedEvent()
     {
         $dispatcher = new Dispatcher;
-        $dispatcher->attach('test', new ListenerStub);
+        $dispatcher->attach('test', new Stubs\ListenerStub);
         $event = new \Nerd\Core\Event\Event('test', $dispatcher);
 
         $this->assertSame($event, $dispatcher->dispatch('test', $event), '->dispatch() did not return the injected Event object');
@@ -91,19 +91,19 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         $event = new \Nerd\Core\Event\Event('test', $dispatcher);
         $event->setArgument('stubrun', false);
         $event->setArgument('stubrunfail', false);
-        $dispatcher->attach('test', new ListenerStub);
-        $dispatcher->attach('test', new ListenerStubFail);
+        $dispatcher->attach('test', new Stubs\ListenerStub);
+        $dispatcher->attach('test', new Stubs\ListenerStubFail);
         $dispatcher->dispatch('test', $event);
 
-        $this->assertTrue($event->getArgument('stubrun'), '->dispatch() could not run the ListenerStub listener');
-        $this->assertFalse($event->getArgument('stubrunfail'), '->dispatch() ran ListenerStubFail but shouldn\'t have');
+        $this->assertTrue($event->getArgument('stubrun'), '->dispatch() could not run the Stubs\ListenerStub listener');
+        $this->assertFalse($event->getArgument('stubrunfail'), '->dispatch() ran Stubs\ListenerStubFail but shouldn\'t have');
 
         $event->setArgument('stubrun', false);
         $event->setArgument('stubrunfail', false);
 
-        $dispatcher->attach('test', new ListenerStubRunsFirst);
+        $dispatcher->attach('test', new Stubs\ListenerStubRunsFirst);
         $event = $dispatcher->dispatch('test', $event);
 
-        $this->assertFalse($event->getArgument('stubrun'), '->dispatch() did not stop propogation on ListenerStubRunsfirst');
+        $this->assertFalse($event->getArgument('stubrun'), '->dispatch() did not stop propogation on Stubs\ListenerStubRunsfirst');
     }
 }

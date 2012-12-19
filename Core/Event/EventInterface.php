@@ -2,7 +2,7 @@
 
 namespace Nerd\Core\Event;
 
-interface EventInterface
+interface EventInterface extends \SplSubject
 {
     public function __construct($name, DispatcherInterface $dispatcher);
 

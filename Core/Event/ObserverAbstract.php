@@ -11,7 +11,7 @@ abstract class ObserverAbstract implements ObserverInterface
 
 	abstract public function update(\SplSubject $event);
 
-	public function __invoke(\SplSubject $event)
+	final public function __invoke(\SplSubject $event)
 	{
 		return $this->update($event);
 	}

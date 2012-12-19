@@ -24,10 +24,15 @@ abstract class ListenerAbstract implements ListenerInterface
     }
 
     // Should this listener run?
-    public function qualify(EventInterface $event)
+    public function qualify(\SplSubject $event)
     {
         return true;
     }
 
-    abstract public function __invoke(EventInterface $event);
+    abstract public function run(\SplSubject $event);
+
+    final public function __invoke(\SplSubject $event)
+    {
+        return $this->run($event);
+    }
 }

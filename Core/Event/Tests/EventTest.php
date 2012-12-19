@@ -58,15 +58,25 @@ class EventTest extends \PHPUnit_Framework_TestCase
     public function testNotify()
     {
         $event = new Event('test');
-        $notifier = new ObserverStub;
+        $notifier = new Stubs\EventObserverStub;
+
+        $this->expectOutputString('EVENT_OBSERVER_STUB_RAN');
 
         $event->setArgument('stubrun', false);
 
         $this->assertSame($event, $event->attach($notifier), '->attach() is not chainable');
         $this->assertCount(1, $event->getObservers(), '->attach() did not assign the observer to this event');
         $this->assertSame($event, $event->notify(), '->notify() is not chainable');
-        $this->assertTrue($event->getArgument('stubrun'), '->notify() did not run the observer stub properly');
         $this->assertSame($event, $event->detach($notifier), '->detach() is not chainable');
         $this->assertCount(0, $event->getObservers(), '->detach() did not remove the observer from this event');
+    }
+
+    /**
+     * @expectedException BadMethodCallException
+     */
+    public function testNotifyFails()
+    {
+        $event = new Event('test');
+        $event->notify();
     }
 }

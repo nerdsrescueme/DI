@@ -2,7 +2,7 @@
 
 namespace Nerd\Core\Event;
 
-class Event implements \SplSubject, EventInterface
+class Event implements EventInterface
 {
     protected $dispatcher;
     protected $name;
@@ -88,7 +88,10 @@ class Event implements \SplSubject, EventInterface
         }
 
         foreach ($this->observers as $observer) {
-            $observer->qualify($this) and $observer->update($this);
+            $run = true;
+            $qualify = method_exists($observer, 'qualify');
+            $qualify and $run = $observer->qualify($this);
+            $run and $observer->update($this);
         }
 
         return $this;
