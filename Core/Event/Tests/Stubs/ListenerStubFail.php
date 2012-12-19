@@ -2,6 +2,9 @@
 
 namespace Nerd\Core\Event\Tests\Stubs;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ListenerStubFail extends \Nerd\Core\Event\ListenerAbstract
 {
 	public function qualify(\SplSubject $event)

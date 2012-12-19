@@ -2,6 +2,9 @@
 
 namespace Nerd\Core\Event\Tests\Stubs;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ListenerStub extends \Nerd\Core\Event\ListenerAbstract
 {
     protected $priority = 10;

@@ -2,6 +2,9 @@
 
 namespace Nerd\Core\Event\Tests\Stubs;
 
+/**
+ * @codeCoverageIgnore
+ */
 class ObserverStubFail extends \Nerd\Core\Event\ObserverAbstract
 {
 	protected $priority = 5;

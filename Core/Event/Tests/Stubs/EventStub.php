@@ -2,6 +2,9 @@
 
 namespace Nerd\Core\Event\Tests\Stubs;
 
+/**
+ * @codeCoverageIgnore
+ */
 class EventStub implements \SplSubject
 {
     public function attach(\SplObserver $observer) {}
