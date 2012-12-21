@@ -256,7 +256,7 @@ class Enumerable implements \Countable, \ArrayAccess, \Iterator {
 			$lambda($value) and $return[] = $value;
 		}
 
-		return $return;
+		return (array) $return;
 	}
 
 	/**
