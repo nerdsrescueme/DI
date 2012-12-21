@@ -249,7 +249,7 @@ class Enumerable implements \Countable, \ArrayAccess, \Iterator {
 		{
 			if ($value = array_shift($array) and $nvalue = $recurse($value))
 			{
-				$return = $return + $this->findAllRecursively($lambda, $recurse, $nvalue);
+				$return = array_merge($return, $this->findAllRecursively($lambda, $recurse, $nvalue));
 				continue;
 			}
 
